@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "e/9TsWOLOtnoapmtAj4EAjEEnXN63WG7Yn3S0XVmOZ6njgRsjQt4eGRwo3apnzSjOXl84x3HGdXz0WOAdzno3Q==",
+  "success": true,
+  "projectFilePath": "E:\\Abp\\ConsoleAppPolly\\ConsoleAppPoLLy\\ConsoleAppPollyTest\\ConsoleAppPoLLy\\ConsoleAppPoLLy.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\cy\\.nuget\\packages\\polly\\7.2.3\\polly.7.2.3.nupkg.sha512",
+    "C:\\Users\\cy\\.nuget\\packages\\polly.extensions.http\\3.0.0\\polly.extensions.http.3.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
