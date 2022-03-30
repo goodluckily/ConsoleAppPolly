@@ -49,9 +49,9 @@ namespace ConsoleAppPolly
             //    Console.WriteLine("开始任务");
             //    throw new ArgumentNullException("类型转换失败");
             //    Console.WriteLine("结束任务");
-            //}); 
-            #endregion
+            //});
 
+            #endregion
 
             #region 2.降级-获取返回值
 
@@ -75,7 +75,6 @@ namespace ConsoleAppPolly
             //Console.WriteLine($"最终结果为：{value}");
 
             #endregion
-
 
             #region 3.熔断机制
 
@@ -165,46 +164,39 @@ namespace ConsoleAppPolly
 
             #endregion
 
-
             #region (2).重试+降级：重试3次,期间成功,则继续执行后面业务;期间失败,则走外层的降级操作
 
-            ////2.1 遇到异常重试3次
-            //Policy policyRetry = Policy.Handle<Exception>().Retry(3);
-            ////2.2 降级操作
-            //Policy policyFallback = Policy.Handle<Exception>()
-            //                              .Fallback(() =>
-            //                              {
-            //                                  //降级执行的动作
-            //                                  Console.WriteLine("我是降级后的执行的操作");
-            //                              }, ex =>
-            //                              {
-            //                                  //捕获业务中的出错信息
-            //                                  Console.WriteLine(ex.Message);
-            //                              });
-            ////Wrap：包裹。policyRetry在里面，policyFallback在外面，如果里面出现了故障，则把故障抛出来给外面
-            ////2.3 进行包裹(出现错误,先重试3次,期间成功,则继续执行后面业务;期间失败,则走外层的降级操作)
-            //Policy policy = policyFallback.Wrap(policyRetry);
-            //int g = 0;
-            ////2.4 执行业务代码
-            //policy.Execute(() =>
-            //{
-            //    Console.WriteLine($"开始任务,g={g}");
-            //    if (g < 10)
-            //    {
-            //        g++;
-            //        throw new Exception("业务出错了");
-            //    }
+            //2.1 遇到异常重试3次
+            Policy policyRetry = Policy.Handle<Exception>().CircuitBreaker(3, TimeSpan.FromSeconds(5));
+            //2.2 降级操作
+            Policy policyFallback = Policy.Handle<Exception>()
+                                          .Fallback(() =>
+                                          {
+                                              //降级执行的动作
+                                              Console.WriteLine("我是降级后的执行的操作");
+                                          }, ex =>
+                                          {
+                                              //捕获业务中的出错信息
+                                              Console.WriteLine(ex.Message);
+                                          });
+            //Wrap：包裹。policyRetry在里面，policyFallback在外面，如果里面出现了故障，则把故障抛出来给外面
+            //2.3 进行包裹(出现错误,先重试3次,期间成功,则继续执行后面业务;期间失败,则走外层的降级操作)
+            Policy policy = policyFallback.Wrap(policyRetry);
+            int g = 0;
+            //2.4 执行业务代码
+            policy.Execute(() =>
+            {
+                Console.WriteLine($"开始任务,g={g}");
+                if (g < 10)
+                {
+                    g++;
+                    throw new Exception("业务出错了");
+                }
 
-            //    Console.WriteLine("完成任务");
-            //});
-
-
-            #region (3).熔断+降级：Execute执行业务代码无须再用Try-catch包裹，否则不抛异常，则无法降级，我们这里演示的是降级，并在降级中拿到业务代码的异常信息
+                Console.WriteLine("完成任务");
+            });
 
 
-
-
-            #endregion
 
             #endregion
 
